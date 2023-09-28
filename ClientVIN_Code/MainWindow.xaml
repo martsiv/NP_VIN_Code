@@ -1,0 +1,172 @@
+﻿<Window x:Class="ClientVIN_Code.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ClientVIN_Code"
+        xmlns:vm="clr-namespace:ClientVIN_Code.ViewModel" 
+        d:DataContext="{d:DesignInstance Type=vm:ViewModel}"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        mc:Ignorable="d"
+        Title="MainWindow" MinHeight="850" MinWidth="800">
+
+    <Window.DataContext>
+        <vm:ViewModel/>
+    </Window.DataContext>
+
+    <StackPanel>
+        <Border Margin="3" Height="100" BorderThickness="3" BorderBrush="Black">
+            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="30"  >Search information by VIN</TextBlock>
+        </Border>
+        <Border Margin="3" MinHeight="50" BorderBrush="Black" BorderThickness="3">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"></ColumnDefinition>
+                    <ColumnDefinition Width="4*"></ColumnDefinition>
+                    <ColumnDefinition Width="1*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" VerticalAlignment="Center" FontSize="20">Enter VIN code:</TextBlock>
+                <TextBox Grid.Column="1" VerticalAlignment="Center" FontSize="20" Text="{Binding VINCode}"></TextBox>
+                <Button Grid.Column="2" VerticalAlignment="Center"  Margin="10" Command="{Binding GetCarDataCmd}">Search</Button>
+            </Grid>
+        </Border>
+        <Border Margin="3" BorderBrush="Black"  BorderThickness="3">
+            <StackPanel>
+                <Border Margin="1" BorderBrush="Black" BorderThickness="2">
+                    <StackPanel>
+                        <TextBlock HorizontalAlignment="Center" Text="Info"></TextBlock>
+                        <UniformGrid Rows="1">
+                            <TextBlock Text="Digits: "></TextBlock>
+                            <TextBlock Text="{Binding MyCarData.digits, TargetNullValue='null', FallbackValue='Not Set'}"></TextBlock>
+                        </UniformGrid>
+                        <UniformGrid Rows="1">
+                            <TextBlock Text="Vin: "></TextBlock>
+                            <TextBlock Text="{Binding MyCarData.vin, TargetNullValue='null', FallbackValue='Not Set'}"></TextBlock>
+                        </UniformGrid>
+                        <UniformGrid Rows="1">
+                            <TextBlock Text="Vendor: "></TextBlock>
+                            <TextBlock Text="{Binding MyCarData.vendor, TargetNullValue='null', FallbackValue='Not Set'}"></TextBlock>
+                        </UniformGrid>
+                        <UniformGrid Rows="1">
+                            <TextBlock Text="Model: "></TextBlock>
+                            <TextBlock Text="{Binding MyCarData.model, TargetNullValue='null', FallbackValue='Not Set'}"></TextBlock>
+                        </UniformGrid>
+                        <UniformGrid Rows="1">
+                            <TextBlock Text="Model year: "></TextBlock>
+                            <TextBlock Text="{Binding MyCarData.model_year, TargetNullValue='null', FallbackValue='Not Set'}"></TextBlock>
+                        </UniformGrid>
+                        <UniformGrid Rows="1">
+                            <TextBlock Text="Is stolen? "></TextBlock>
+                            <RadioButton IsChecked="{Binding MyCarData.is_stolen, TargetNullValue=False}" IsThreeState="True" IsEnabled="False"></RadioButton>
+                        </UniformGrid>
+                        <TextBlock HorizontalAlignment="Center" Text="Region"></TextBlock>
+                        <UniformGrid Rows="1">
+                            <TextBlock Text="Name: "></TextBlock>
+                            <TextBlock Text="{Binding MyCarData.region.name, TargetNullValue='null', FallbackValue='Not Set'}"></TextBlock>
+                        </UniformGrid>
+                        <UniformGrid Rows="1">
+                            <TextBlock Text="Name UA: "></TextBlock>
+                            <TextBlock Text="{Binding MyCarData.region.name_ua, TargetNullValue='null', FallbackValue='Not Set'}"></TextBlock>
+                        </UniformGrid>
+                        <UniformGrid Rows="1">
+                            <TextBlock Text="Old code: "></TextBlock>
+                            <TextBlock  Text="{Binding MyCarData.region.old_code, TargetNullValue='null', FallbackValue='Not Set'}"></TextBlock>
+                        </UniformGrid>
+                        <UniformGrid Rows="1">
+                            <TextBlock Text="New code: "></TextBlock>
+                            <TextBlock Text="{Binding MyCarData.region.new_code, TargetNullValue='null', FallbackValue='Not Set'}"></TextBlock>
+                        </UniformGrid>
+                        <UniformGrid Rows="1">
+                            <TextBlock Text="New code 1: "></TextBlock>
+                            <TextBlock Text="{Binding MyCarData.region.new_code_1, TargetNullValue='null', FallbackValue='Not Set'}"></TextBlock>
+                        </UniformGrid>
+                        <UniformGrid Rows="1">
+                            <TextBlock Text="New code 2: "></TextBlock>
+                            <TextBlock Text="{Binding MyCarData.region.new_code_2, TargetNullValue='null', FallbackValue='Not Set'}"></TextBlock>
+                        </UniformGrid>
+                    </StackPanel>
+                </Border>
+                <Border Margin="1" BorderBrush="Black" BorderThickness="2">
+                    <StackPanel>
+                        <TextBlock HorizontalAlignment="Center" Text="Operations"></TextBlock>
+                        <ListBox ItemsSource="{Binding MyCarData.operations, TargetNullValue={x:Null}}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <ScrollViewer>
+                                        <StackPanel>
+                                            <TextBlock Margin="5" VerticalAlignment="Center" HorizontalAlignment="Center">***</TextBlock>
+                                            <UniformGrid Rows="1">
+                                                <TextBlock Text="Digits: "></TextBlock>
+                                                <TextBlock Text="{Binding digits}"></TextBlock>
+                                            </UniformGrid>
+                                            <UniformGrid Rows="1">
+                                                <TextBlock Text="Registered at: "></TextBlock>
+                                                <TextBlock Text="{Binding registered_at}"></TextBlock>
+                                            </UniformGrid>
+                                            <UniformGrid Rows="1">
+                                                <TextBlock Text="Model year: "></TextBlock>
+                                                <TextBlock Text="{Binding model_year}"></TextBlock>
+                                            </UniformGrid>
+                                            <UniformGrid Rows="1">
+                                                <TextBlock Text="Vendor: "></TextBlock>
+                                                <TextBlock Text="{Binding vendor}"></TextBlock>
+                                            </UniformGrid>
+                                            <UniformGrid Rows="1">
+                                                <TextBlock Text="Model: "></TextBlock>
+                                                <TextBlock Text="{Binding model}"></TextBlock>
+                                            </UniformGrid>
+                                            <UniformGrid Rows="1">
+                                                <TextBlock Text="Department: "></TextBlock>
+                                                <TextBlock Text="{Binding department}"></TextBlock>
+                                            </UniformGrid>
+                                            <UniformGrid Rows="1">
+                                                <TextBlock Text="Color: "></TextBlock>
+                                                <TextBlock Text="{Binding color.ua}"></TextBlock>
+                                            </UniformGrid>
+                                            <UniformGrid Rows="1">
+                                                <TextBlock Text="Is registered to company: "></TextBlock>
+                                                <TextBlock></TextBlock>
+                                            </UniformGrid>
+                                            <UniformGrid Rows="1">
+                                                <TextBlock Text="Address: "></TextBlock>
+                                                <TextBlock Text="{Binding address}"></TextBlock>
+                                            </UniformGrid>
+                                            <UniformGrid Rows="1">
+                                                <TextBlock Text="KOATUU: "></TextBlock>
+                                                <TextBlock Text="{Binding koatuu}"></TextBlock>
+                                            </UniformGrid>
+                                            <UniformGrid Rows="1">
+                                                <TextBlock Text="Displacement: "></TextBlock>
+                                                <TextBlock Text="{Binding displacement}"></TextBlock>
+                                            </UniformGrid>
+                                            <UniformGrid Rows="1">
+                                                <TextBlock Text="Kind: "></TextBlock>
+                                                <TextBlock Text="{Binding kind.ua}"></TextBlock>
+                                            </UniformGrid>
+                                            <UniformGrid Rows="1">
+                                                <TextBlock Text="Operation group: "></TextBlock>
+                                                <TextBlock Text="{Binding operation_group.ua}"></TextBlock>
+                                            </UniformGrid>
+                                            <UniformGrid Rows="1">
+                                                <TextBlock Text="Fuel: "></TextBlock>
+                                                <TextBlock Text="{Binding fuel.ua}"></TextBlock>
+                                            </UniformGrid>
+                                            <UniformGrid Rows="1">
+                                                <TextBlock Text="Own weight: "></TextBlock>
+                                                <TextBlock Text="{Binding own_weight}"></TextBlock>
+                                            </UniformGrid>
+                                            <UniformGrid Rows="1">
+                                                <TextBlock Text="Total weight: "></TextBlock>
+                                                <TextBlock Text="{Binding total_weight}"></TextBlock>
+                                            </UniformGrid>
+                                        </StackPanel>
+                                    </ScrollViewer>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </Border>
+    </StackPanel>
+</Window>
