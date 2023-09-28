@@ -7,6 +7,7 @@ using System.Net.Http.Json;
 using System.Text.Json;
 using System.IO;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace ServerVIN_Code
 {
@@ -72,20 +73,7 @@ namespace ServerVIN_Code
         }
         public static async Task<CarData?> APIGetData(string apiKey, string vinCode)
         {
-            //string vinCode = "WBA7########57838"; // Ваш VIN-код
-            //string fileName = "Json.txt";
-            //string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, fileName);
-
-            //using (StreamReader reader = new StreamReader(filePath))
-            //{
-            //    string text = await reader.ReadToEndAsync();
-            //    Console.WriteLine(text);
-            //    CarData? carData = JsonSerializer.Deserialize<CarData>(text);
-            //    return carData;
-            //}
-
             Console.OutputEncoding = Encoding.UTF8;
-
             using (HttpClient client = new HttpClient())
             {
                 client.DefaultRequestHeaders.Add("Accept", "application/json");
@@ -98,16 +86,8 @@ namespace ServerVIN_Code
                 if (response.IsSuccessStatusCode)
                 {
                     string content = await response.Content.ReadAsStringAsync();
-
-                    //string fileName = "Json.txt";
-                    //string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, fileName);
-
-                    //using (StreamWriter writer = File.AppendText(filePath))
-                    //{
-                    //    writer.WriteLine(content);
-                    //}
                     CarData carData = JsonSerializer.Deserialize<CarData>(content);
-
+                    WriteLog(vinCode, content);
                     return carData;
                 }
                 else
@@ -129,6 +109,21 @@ namespace ServerVIN_Code
                 Console.WriteLine("API key file not found. EXIT the program!");
                 Environment.Exit(1);
                 return string.Empty;
+            }
+        }
+        public static void WriteLog(string filenNameJSON, string content)
+        {
+            //Логуємо запити і JSON відповіді в окрему папку на сервері
+            string logDirectoryPath = "Logs"; // Шлях до директорії для логів
+            string logFileName = Path.Combine("Logs", filenNameJSON + ".json"); // Повний шлях до файлу логу
+            if (!Directory.Exists(logDirectoryPath))
+            {
+                // Якщо директорія не існує, створіть її
+                Directory.CreateDirectory(logDirectoryPath);
+            }
+            using (StreamWriter writer = File.AppendText(logFileName))
+            {
+                writer.WriteLine(content);
             }
         }
     }
